@@ -40,10 +40,15 @@ class ColorPicker:
         self.colors_lb.delete(0, tk.END)
 
         for color in self.colors:
-            preview = tk.Label(self.colors_lb, bg=color, width=2)
-            preview.grid(row=self.colors.index(color), column=0)
-            hexa = tk.Label(self.colors_lb, text=color)
-            hexa.grid(row=self.colors.index(color), column=1)
+            # color_frame = tk.Frame(self.colors_lb)
+            # color_frame.pack(fill=tk.BOTH)
+            # preview = tk.Label(color_frame, bg=color, width=2)
+            # preview.pack(side=tk.LEFT)
+            # hexa = tk.Label(color_frame, text=color)
+            # hexa.pack(side=tk.LEFT)
+            
+            self.colors_lb.insert(tk.END, color)
+            self.colors_lb.itemconfig(tk.END, {'bg': color})
 
     def generate_combinaisons(self):
         # Placeholder for combination generation
