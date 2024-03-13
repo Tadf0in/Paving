@@ -11,6 +11,9 @@ class App():
         self.image_path = image_path
         self.colors = colors
         
+        self.num_colors_entry = tk.Entry(self.root)
+        self.num_colors_entry.pack()
+
         self.generate_btn = tk.Button(self.root, text="Générer", command=self.generate_combinaisons)
         self.generate_btn.pack(pady=10)
 
@@ -32,6 +35,7 @@ class App():
         # Détermine les couleurs dominantes
         kmeans = KMeans(n_clusters=num_colors)
         kmeans.fit(pixels)
+        print(kmeans)
         top_colors = kmeans.cluster_centers_.astype(int)
 
         # Convertit en hexa
