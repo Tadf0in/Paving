@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import colorchooser
 
+
 class ColorPicker:
     def __init__(self, root):
         self.root = root
@@ -19,9 +20,17 @@ class ColorPicker:
         self.colors_lb = tk.Listbox(self.root, selectmode=tk.MULTIPLE)
         self.colors_lb.pack(pady=10)
 
-    def get_colors(self):
-        return self.colors
 
+    @property
+    def colors(self):
+        return self._colors
+    
+    @colors.setter
+    def colors(self, color_list):
+        self._colors = color_list
+
+
+    # Ajoute une couleur dans la liste
     def add_color(self):
         color = colorchooser.askcolor()
         rgb, hex = color
@@ -29,12 +38,16 @@ class ColorPicker:
             self.colors.append(hex)
             self.update_colors_lb()
 
+
+    # Supprime les couleurs séléctionnées de la liste
     def remove_color(self):
         indexs = self.colors_lb.curselection()
         for index in reversed(indexs):
             del self.colors[index]
         self.update_colors_lb()
 
+
+    # Actualise l'interface avec la liste actuelle de couleurs
     def update_colors_lb(self):
         self.colors_lb.delete(0, tk.END)
 
