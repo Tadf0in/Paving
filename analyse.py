@@ -17,10 +17,10 @@ def hex_to_rgb(hex_code):
 def get_top_colors(image, num_colors):
     image_array = np.array(image)
 
-    width = image_array.shape[0]
+    shape = image_array.shape
 
     # matrice n par 3 (n pixels rgb)
-    pixels = image_array.reshape(-1, 3)
+    pixels = image_array.reshape(-1, shape[2])
 
     # Détermine les couleurs dominantes
     kmeans = KMeans(n_clusters=num_colors)
@@ -41,7 +41,7 @@ def get_top_colors(image, num_colors):
         print(color, "->", colors[i], pixels[mask].size)
         pixels[mask] = hex_to_rgb(colors[i])
 
-    pixels = pixels.reshape((width, width, 3))
+    pixels = pixels.reshape(*shape)
 
     # Convert the modified NumPy array back to an image
     new_image = Image.fromarray(pixels)
