@@ -43,9 +43,9 @@ class App():
 
         os.makedirs(OUTPUT_FOLDER, exist_ok=True)
         
-        # Génère les combinaisons de couleur
-        # colors_combinaisons = list(product(self.cp.colors, repeat=num_colors))
-        colors_combinaisons = list(permutations(self.cp.colors, num_colors))
+        # Génère les combinaisons de couleur                                        # Commentez une des deux lignes :
+        colors_combinaisons = list(permutations(self.cp.colors, num_colors))        # PERMUTATIONS (pas 2 fois la meme couleur)
+        # colors_combinaisons = list(product(self.cp.colors, repeat=num_colors))    # COMBINAISONS
         
         # Génère les patterns avec chaque combinaison de couleurs
         for i, colors in enumerate(colors_combinaisons):

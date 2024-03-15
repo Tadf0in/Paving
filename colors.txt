@@ -1,6 +1,9 @@
 #ff0000
-#00ff00
 #0000ff
 #00ffff
 #ff00ff
 #ffff00
+#00ff00
+#cdbf5f
+#76afb6
+#ff80ff

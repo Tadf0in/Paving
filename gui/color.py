@@ -18,9 +18,8 @@ class ColorPicker:
         self.colors_lb = tk.Listbox(self.root, selectmode=tk.MULTIPLE)
         self.colors_lb.pack(pady=10)
 
-        # self.colors = []
-        self.colors = self.read_colors_txt()
-        self.update_colors_lb()
+        self.colors = []
+        self.read_colors_txt()
 
 
     @property
@@ -62,15 +61,24 @@ class ColorPicker:
 
         for color in self.colors:            
             self.colors_lb.insert(tk.END, color)
-            self.colors_lb.itemconfig(tk.END, {'bg': color})  
+            self.colors_lb.itemconfig(tk.END, {'bg': color}) 
+        
+        self.write_colors_txt()
 
-    
+    # Lis les couleurs depuis le fichier colors.txt
     def read_colors_txt(self):
         with open("colors.txt", "r") as f:
-            colors = []
             for color in f.readlines():
-                colors.append(color.strip("\n"))
-        return colors
+                hex = color.strip("\n")
+                if hex not in self.colors:
+                    self.colors.append(hex)
+        self.update_colors_lb()
+    
+    # Enregistre les couleurs dans le fichier colors.txt
+    def write_colors_txt(self):
+        with open("colors.txt", "w") as f:
+            for color in self.colors:
+                f.write(color + "\n")
 
 
 if __name__ == '__main__':
