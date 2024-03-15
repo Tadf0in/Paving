@@ -31,10 +31,17 @@ class ColorPicker:
 
 
     # Ajoute une couleur dans la liste
-    def add_color(self):
-        color = colorchooser.askcolor()
-        rgb, hex = color
-        if color and hex not in self.colors:
+    def add_color(self, hex=None):
+        if hex is None:
+            try:
+                color = colorchooser.askcolor()
+            except:
+                return
+            
+            if color[1] is not None:
+                hex = color[1]
+
+        if hex not in self.colors:
             self.colors.append(hex)
             self.update_colors_lb()
 

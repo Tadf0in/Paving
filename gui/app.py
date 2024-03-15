@@ -25,15 +25,18 @@ class App():
         try:
             num_colors = int(self.num_colors.get())
         except ValueError:
-            return
+            num_colors = 4
         
-        image = cv2.imread(self.ii.img_path) # BGR$
+        image = cv2.imread(self.ii.img_path) # BGR
 
         # Convertir l'image lissée en espace de couleurs HSV
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         pixels, shape = self.get_pixels(hsv_image)
 
         clusters = self.get_top_colors(pixels, num_colors)
+
+        # for cluster in clusters:
+        #     self.cp.add_color(self.hsv_to_hex(cluster))
 
         self.generate(pixels, shape, clusters, self.cp.colors)
 
@@ -68,12 +71,12 @@ class App():
         shape = image_array.shape # dimensions de l'image : largeur, longueur, canaux
         pixels = image_array.reshape(-1, shape[2]) # matrice n par 3 (4 si png) : n pixels rgb(a)
         return pixels, shape
-    
+        
 
     def hsv_mask(self, pixels, target_hsv, tolerance):
         # Gérer la teinte (H) de manière cyclique en degrés
         hue_diff = np.abs(pixels[:, 0] - target_hsv[0])
-        hue_diff = np.minimum(hue_diff, 360 - hue_diff)
+        hue_diff = np.minimum(hue_diff, 179 - hue_diff)
         
         # Comparer la différence angulaire de la teinte avec la tolérance en degrés
         hue_mask = hue_diff <= tolerance[0]
@@ -107,17 +110,15 @@ class App():
     def generate(self, pixels, shape, clusters, colors):
         # Remplacer chaque cluster par les couleurs choisies
         for i, color in enumerate(clusters):
-            # mask = np.all(np.abs(pixels - hex_to_hsv(color)) <= tolerance, axis=1)
             mask = self.hsv_mask(pixels, color, [10, 100, 100])
-            print(self.hsv_to_hex(color), pixels[mask].size)
             pixels[mask] = self.hex_to_hsv(colors[i])
 
-            # Retransforme le tableau numpy en image
-            pixels = pixels.reshape(*shape)
+        # Retransforme le tableau numpy en image
+        pixels = pixels.reshape(*shape)
 
-            # Convertir de HSV à BGR pour utiliser cv2.imwrite
-            image_bgr = cv2.cvtColor(pixels, cv2.COLOR_HSV2BGR)
-            smooth = cv2.GaussianBlur(image_bgr, (11, 11), 0)
+        # Convertir de HSV à BGR pour utiliser cv2.imwrite
+        image_bgr = cv2.cvtColor(pixels, cv2.COLOR_HSV2BGR)
+        smooth = cv2.GaussianBlur(image_bgr, (11, 11), 0)
 
-            # Enregistrer l'image générée avec cv2.imwrite()
-            cv2.imwrite("testhsv.jpeg", smooth)
+        # Enregistrer l'image générée avec cv2.imwrite()
+        cv2.imwrite("testgui.jpeg", smooth)

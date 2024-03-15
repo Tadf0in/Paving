@@ -4,7 +4,7 @@ import numpy as np
 import colorsys
 
 image_path = "image.jpg"
-colors = ["#ff0000", "#00ff00", "0000ff", "#00ffff", "#ff00ff", "ffff00", "0f0f0f"]
+colors = ["#024836", "#f2e689", "#15ae86", "#aa39e8", "#cd5d86", "#eb248b", "#ca2589"]
 
 def generate_combinaisons(num_colors=6):
     image = cv2.imread(image_path) # BGR$
@@ -58,11 +58,13 @@ def get_pixels(image):
 def hsv_mask(pixels, target_hsv, tolerance):
     # Gérer la teinte (H) de manière cyclique en degrés
     hue_diff = np.abs(pixels[:, 0] - target_hsv[0])
-    hue_diff = np.minimum(hue_diff, 360 - hue_diff)
+    hue_diff = np.minimum(hue_diff, 179 - hue_diff)
     
     # Comparer la différence angulaire de la teinte avec la tolérance en degrés
     hue_mask = hue_diff <= tolerance[0]
     
+    print(pixels.shape, pixels[:, 1:].shape, target_hsv[1:])
+
     # Comparer la différence de saturation (S) et de valeur (V) avec la tolérance
     sat_val_diff = np.abs(pixels[:, 1:] - target_hsv[1:])
     sat_val_mask = np.all(sat_val_diff <= tolerance[1:], axis=1)
