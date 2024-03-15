@@ -43,3 +43,9 @@ class ImportImage():
             self.img_label.image = photo 
             self.img_label.config(width=300)
             self.img_label.config(height=300)
+
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    ii = ImportImage(root)
+    root.mainloop()

@@ -5,8 +5,6 @@ from tkinter import colorchooser
 class ColorPicker:
     def __init__(self, root):
         self.root = root
-        
-        self.colors = []
 
         self.btn_frame = tk.Frame(self.root)
         self.btn_frame.pack(pady=10)
@@ -19,6 +17,10 @@ class ColorPicker:
 
         self.colors_lb = tk.Listbox(self.root, selectmode=tk.MULTIPLE)
         self.colors_lb.pack(pady=10)
+
+        # self.colors = []
+        self.colors = self.read_colors_txt()
+        self.update_colors_lb()
 
 
     @property
@@ -61,3 +63,17 @@ class ColorPicker:
         for color in self.colors:            
             self.colors_lb.insert(tk.END, color)
             self.colors_lb.itemconfig(tk.END, {'bg': color})  
+
+    
+    def read_colors_txt(self):
+        with open("colors.txt", "r") as f:
+            colors = []
+            for color in f.readlines():
+                colors.append(color.strip("\n"))
+        return colors
+
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    cp = ColorPicker(root)
+    root.mainloop()
