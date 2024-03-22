@@ -12,3 +12,5 @@ if __name__ == "__main__":
     app = App(root, ii, cp)
     
     root.mainloop()
+
+    app.check_stop()

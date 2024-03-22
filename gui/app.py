@@ -5,8 +5,10 @@ import cv2
 import colorsys
 from itertools import product, permutations
 import os
+import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
 
-OUTPUT_FOLDER = "ouptut/"
+OUTPUT_FOLDER = "ouptut_threads/"
 
 class App():
     def __init__(self, root, image_importer, color_picker):
@@ -22,6 +24,11 @@ class App():
 
         self.generate_btn = tk.Button(self.root, text="Générer", command=self.generate_combinaisons)
         self.generate_btn.pack(pady=10)
+
+        set_exit_button = tk.Button(root, text="Sortir", command=self.set_stop_flag)
+        set_exit_button.pack()
+
+        self.threads_stop_flag = False
 
 
     def generate_combinaisons(self):
@@ -43,15 +50,37 @@ class App():
 
         os.makedirs(OUTPUT_FOLDER, exist_ok=True)
         
-        # Génère les combinaisons de couleur
-        # colors_combinaisons = list(product(self.cp.colors, repeat=num_colors))
-        colors_combinaisons = list(permutations(self.cp.colors, num_colors))
+        # Génère les combinaisons de couleur                                        # Commentez une des deux lignes :
+        colors_combinaisons = list(permutations(self.cp.colors, num_colors))        # PERMUTATIONS (pas 2 fois la meme couleur)
+        # colors_combinaisons = list(product(self.cp.colors, repeat=num_colors))    # COMBINAISONS
         
-        # Génère les patterns avec chaque combinaison de couleurs
+        """
+        pool = multiprocessing.Pool(processes=4)
+
+        args_list = []
         for i, colors in enumerate(colors_combinaisons):
-            print(i, colors)
+            print(colors)
             output_path = OUTPUT_FOLDER + str(i) + ",".join(colors) + ".jpeg"
-            self.generate(pixels, shape, clusters, colors, output_path)
+            args_list.append((pixels, shape, clusters, colors, output_path))
+    
+        # Génère les patterns avec chaque combinaison de couleurs
+        pool.map(self.generate, args_list)
+
+        pool.close()
+        pool.join()
+        """
+
+         # Créer un ThreadPoolExecutor
+        with ThreadPoolExecutor() as executor:
+            # Liste des arguments pour chaque tâche de génération de pattern
+            args_list = []
+            for i, colors in enumerate(colors_combinaisons):
+                print(colors)
+                output_path = OUTPUT_FOLDER + str(i) + ",".join(colors) + ".jpeg"
+                args_list.append(( pixels, shape, clusters, colors, output_path))
+
+            # Exécuter les tâches en parallèle
+            executor.map(self.generate, args_list)
 
 
     def rgb_to_hex(self, rgb_color):
@@ -120,7 +149,13 @@ class App():
         return [color for color, _ in sorted_clusters]
     
 
-    def generate(self, pixels, shape, clusters, colors, output_path):
+    def generate(self, args):
+        print(args)
+
+        pixels, shape, clusters, colors, output_path = args
+
+        print(pixels, shape, clusters, colors, output_path)
+
         pixels_copy = np.copy(pixels)
 
         # Remplacer chaque cluster par les couleurs choisies
@@ -137,3 +172,15 @@ class App():
 
         # Enregistrer l'image générée avec cv2.imwrite()
         cv2.imwrite(output_path, smooth)
+
+
+    def check_stop(self):
+        if self.threads_stop_flag:
+            self.root.quit()
+
+        else:
+            self.root.after(100, self.check_stop)
+
+
+    def set_stop_flag(self):
+        self.threads_stop_flag = True
