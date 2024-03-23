@@ -34,23 +34,6 @@ def get_color_tab(csv_path:str) -> dict:
     return colors
 
 
-@DeprecationWarning
-def get_colors() -> list[str]:
-    """ Récupère la liste des couleurs depuis le fichier colors.txt
-    In:
-        /
-    Out:
-        - colors (list[str]) : liste des couleurs en hexa
-    """
-    colors = []
-    with open("colors.txt", "r") as f:
-        for color in f.readlines():
-            color = color.strip("\n")
-            if len(color) == 7:
-                colors.append(color)
-    return colors
-
-
 def generate_motif_colors(img_path:str, output_dir:str, colors:dict) -> None:
     """ Génère le motif décliné sous toutes les couleurs de la liste
     In:

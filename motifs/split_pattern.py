@@ -30,9 +30,34 @@ def rgb_to_bgr(r, g, b):
     return (b, g, r)
 
 
-def split_colors(image, output_dir):
-    """ Sépare l'image couleur par couleur
+def get_colors(txt_file_path:str) -> list[str]:
+    """ Récupère la liste des couleurs depuis le fichier colors.txt
+    In:
+        - txt_file_path (str) : fichier lsitantn les couleurs présentes dans le pattern
+    Out:
+        - colors (list[str]) : liste des couleurs en hexa
     """
+    colors = []
+    with open(txt_file_path, "r") as f:
+        for color in f.readlines():
+            color = color.strip("\n")
+            if len(color) == 7:
+                colors.append(color)
+    return colors
+
+
+def split_colors(pattern_path:str, output_dir:str) -> None:
+    """ Sépare l'image couleur par couleur
+    In :
+        - pattern_path (str) : chemin vers l'image du pattern
+    Out:
+        - output_dir (str) : dossier de destination où va se générer les motifs
+    """
+    image = cv2.imread(pattern_path, cv2.IMREAD_UNCHANGED)
+
+    colors_txt_path = pattern_path.split(".")[0] + "_colors.txt"
+    colors = get_colors(colors_txt_path)
+
     root_pixels = image.reshape(-1, 4)
     for i, color in enumerate(colors):
         pixels = np.copy(root_pixels)
@@ -47,7 +72,7 @@ def split_colors(image, output_dir):
 
 
 def main():
-    img_path = f"patterns/{NOM_MOTIF}/pattern.png"
+    img_path = f"patterns/{NOM_MOTIF}.png"
     image = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
     split_colors(image)
 

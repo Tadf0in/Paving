@@ -17,13 +17,12 @@ def main():
     mkdir("output/" + NOM_MOTIF)
 
     # Sépare les couleurs du pattern pour récupérer les différents motifs
-    pattern_path = f"patterns/{NOM_MOTIF}/pattern.png"
-    pattern = cv2.imread(pattern_path, cv2.IMREAD_UNCHANGED)
-    
+    pattern_path = f"patterns/{NOM_MOTIF}.png"    
     pattern_output_dir =  f"output/{NOM_MOTIF}/motifs"
     mkdir(pattern_output_dir)
 
-    split_colors(pattern, pattern_output_dir)
+    split_colors(pattern_path, pattern_output_dir)
+    print("Motifs séparés")
 
     # Récupère les motifs générés
     colors = get_color_tab("correspondance.csv")
@@ -36,6 +35,7 @@ def main():
         mkdir(motifs_output_dir)        
 
         generate_motif_colors(motif_path, motifs_output_dir, colors)
+        print(f"{num_motif} : OK")
 
 
 if __name__ == '__main__':
