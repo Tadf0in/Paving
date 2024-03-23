@@ -3,18 +3,6 @@ import numpy as np
 
 NOM_MOTIF = "agathe"
 
-colors = [
-    "#00BF62",
-    "#5E17EA",
-    "#938589",
-    "#95A288",
-    "#9FAED2",
-    "#AABDB6",
-    "#D7982F",
-    "#FF0000",
-    "#FFDF5A",
-]
-
 
 def hex_to_rgb(hex_code:str) -> tuple[int]:
     """ Convertit une couleur hexa en RGB
@@ -33,7 +21,7 @@ def rgb_to_bgr(r, g, b):
 def get_colors(txt_file_path:str) -> list[str]:
     """ Récupère la liste des couleurs depuis le fichier colors.txt
     In:
-        - txt_file_path (str) : fichier lsitantn les couleurs présentes dans le pattern
+        - txt_file_path (str) : fichier lsitant les couleurs présentes dans le pattern
     Out:
         - colors (list[str]) : liste des couleurs en hexa
     """
