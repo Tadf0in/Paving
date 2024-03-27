@@ -42,6 +42,11 @@ def split_colors(pattern_path:str, output_dir:str) -> None:
         - output_dir (str) : dossier de destination où va se générer les motifs
     """
     image = cv2.imread(pattern_path, cv2.IMREAD_UNCHANGED)
+    height, width, channels = image.shape
+    size = min(height, width)
+    if channels == 3:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
+    image = image[:size, :size, :]
 
     colors_txt_path = pattern_path.split(".")[0] + "_colors.txt"
     colors = get_colors(colors_txt_path)
