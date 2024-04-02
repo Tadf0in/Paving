@@ -3,7 +3,7 @@ from split_pattern import split_colors
 from motifs_color import generate_motif_colors, get_color_tab
 
 
-NOM_MOTIF = "agathe"
+NOM_MOTIF = "monceau"
 
 
 def mkdir(name):

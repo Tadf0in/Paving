@@ -52,16 +52,24 @@ def split_colors(pattern_path:str, output_dir:str) -> None:
     colors = get_colors(colors_txt_path)
 
     root_pixels = image.reshape(-1, 4)
+    size = int(np.sqrt(root_pixels.shape[0]))
+
+    # Motifs
     for i, color in enumerate(colors):
         pixels = np.copy(root_pixels)
         bgr = rgb_to_bgr(*hex_to_rgb(color))
         mask = np.all(np.abs(pixels[:, :3] - bgr) == 0, axis=1)
         pixels[~mask] = [0, 0, 0, 0]
+        root_pixels[mask] = [1, 2, 3, 4]
 
-        size = int(np.sqrt(pixels.shape[0]))
         out_img = pixels.reshape(size, size, 4)
         
         cv2.imwrite(f"{output_dir}/Motif {i+1}.png", out_img)
+
+    # Background
+    root_pixels[~np.all(root_pixels == [1, 2, 3, 4], axis=1)] = [255, 255, 255, 255]
+    out_img = root_pixels.reshape(size, size, 4)
+    cv2.imwrite(f"{output_dir}/Background.png", out_img)
 
 
 def main():

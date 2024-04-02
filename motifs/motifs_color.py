@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 
-NOM_MOTIF = "agathe"
+NOM_MOTIF = "monceau"
 
 
 def hex_to_rgb(hex_code:str) -> tuple[int]:
@@ -57,8 +57,8 @@ def group_by_4(image:object, joint_size:int=None) -> object:
     bottom_left = cv2.rotate(bottom_right, cv2.ROTATE_90_CLOCKWISE)
     top_left = cv2.rotate(bottom_left, cv2.ROTATE_90_CLOCKWISE)
 
-    horizontal_joint = np.ones((joint_size+marge*2, size*2+joint_size, 4), dtype=np.uint8) * 255
-    vertical_joint = np.ones((size*2+joint_size, joint_size+marge*2, 4), dtype=np.uint8) * 255
+    horizontal_joint = np.zeros((joint_size+marge*2, size*2+joint_size, 4), dtype=np.uint8)
+    vertical_joint = np.zeros((size*2+joint_size, joint_size+marge*2, 4), dtype=np.uint8)
 
     output_image[0:size, 0:size] = top_left
     output_image[size+joint_size:size*2+joint_size, 0:size] = bottom_left
@@ -82,12 +82,10 @@ def generate_motif_colors(img_path:str, output_dir:str, colors:dict) -> None:
         /
     """
     image = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
-
+    
     for hexa in colors:
         image[image[:, :, 3] > 50] = list(rgb_to_bgr(*hex_to_rgb(hexa))) + [255]
-        output_path = f"{output_dir}/{colors[hexa]}.png"
-        print(output_path)
-
+        
         resized = cv2.resize(image, (122, 122))
 
         # joint_size = int(image.shape[0]/100)
@@ -97,6 +95,8 @@ def generate_motif_colors(img_path:str, output_dir:str, colors:dict) -> None:
 
         out_img = cv2.resize(by_16, (480, 493))
 
+        output_path = f"{output_dir}/{colors[hexa]}.png"
+        print(output_path)
         cv2.imwrite(output_path, out_img)
 
 
